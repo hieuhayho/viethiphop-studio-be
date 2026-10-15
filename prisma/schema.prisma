@@ -41,8 +41,8 @@ model Service {
   number      String? // e.g., '01'
   title       String
   english     String?
-  description String
-  suitableFor String?
+  description String  @db.Text
+  suitableFor String? @db.Text
   source      String?
   isMain      Boolean @default(true)
   order       Int     @default(0)
@@ -60,7 +60,7 @@ model Media {
   alt            String?
   title          String?
   category       String // "Không gian" | "Âm nhạc"
-  description    String?
+  description    String? @db.Text
   source         String?
   objectPosition String?
   order          Int     @default(0)
@@ -75,7 +75,8 @@ model Media {
 model Faq {
   id       String  @id @default(cuid())
   question String
-  answer   String
+  answer   String  @db.Text
+  category String  @default("general") // "general" | "pricing"
   order    Int     @default(0)
   isActive Boolean @default(true)
 
@@ -88,7 +89,7 @@ model Faq {
 model Setting {
   id    String @id @default(cuid())
   key   String @unique
-  value String
+  value String @db.Text
   
   updatedAt DateTime @updatedAt
 
@@ -100,7 +101,7 @@ model Consultation {
   name        String
   contact     String
   service     String
-  description String
+  description String  @db.Text
   date        String?
   time        String?
   status      String  @default("PENDING") // PENDING, CONTACTED, DONE
@@ -134,11 +135,11 @@ model MixTrack {
   title       String
   artist      String   @default("Việt Hiphop Artist")
   packageType String   @default("Nâng cao") // "Cơ bản" | "Nâng cao" | "Chuyên nghiệp"
-  category    String   @default("Phát hành") // "Phát hành" | "Cover" | "TVC" | "Giọng đọc"
+  category    String   @default("Nhạc phát hành") // "Nhạc phát hành" | "Cover" | "TVC" | "Giọng đọc"
   subCategory String?  // "Rap" | "RnB" | "Pop" | "Ballad" | "Nhạc cưới" | "Trữ tình" | "Tốp ca"
   youtubeUrl  String
   thumbUrl    String?
-  description String?
+  description String? @db.Text
   order       Int      @default(0)
   isActive    Boolean  @default(true)
 
@@ -152,13 +153,11 @@ model Event {
   id          String   @id @default(cuid())
   title       String
   slug        String   @unique
-  description String?  // Tóm tắt ngắn
-  content     String   // Nội dung bài viết
+  description String?  @db.Text // Tóm tắt ngắn
+  content     String   @db.Text // Nội dung bài viết
   image       String?  // Ảnh bìa bài viết
   category    String   @default("Tin tức") // "Sự kiện" | "Tin tức" | "Workshop"
   author      String   @default("Việt Hiphop Studio")
-  date        String?  // Ngày hiển thị hoặc ngày diễn ra
-  location    String?  // Địa điểm
   order       Int      @default(0)
   isActive    Boolean  @default(true)
 
@@ -166,5 +165,55 @@ model Event {
   updatedAt   DateTime @updatedAt
 
   @@map("events")
+}
+
+model AboutGalleryImage {
+  id        String   @id @default(cuid())
+  src       String
+  caption   String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("about_gallery_images")
+}
+
+model GearCategory {
+  id        String     @id @default(cuid())
+  title     String
+  icon      String     @default("Mic2")
+  order     Int        @default(0)
+  isActive  Boolean    @default(true)
+  items     GearItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("gear_categories")
+}
+
+model GearItem {
+  id         String          @id @default(cuid())
+  categoryId String
+  category   GearCategory    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name       String
+  order      Int             @default(0)
+  isActive   Boolean         @default(true)
+  images     GearItemImage[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@map("gear_items")
+}
+
+model GearItemImage {
+  id        String   @id @default(cuid())
+  itemId    String
+  item      GearItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  src       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("gear_item_images")
 }
 

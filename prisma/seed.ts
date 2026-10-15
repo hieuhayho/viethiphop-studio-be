@@ -165,7 +165,7 @@ async function main() {
         title: 'Đêm Nay Ta Đi Đâu',
         artist: "Lil' G ft. Young T",
         packageType: 'Chuyên nghiệp',
-        category: 'Phát hành',
+        category: 'Nhạc phát hành',
         subCategory: 'Rap',
         youtubeUrl: 'https://www.youtube.com/embed/9bZkp7q19f0',
         description: 'Vocal tuning Melodyne, 808 Analog Saturation, Loudness -14 LUFS Spotify',
@@ -175,7 +175,7 @@ async function main() {
         title: 'Có Khi Nào Rời Xa (RnB Re-work)',
         artist: 'Hà My',
         packageType: 'Nâng cao',
-        category: 'Phát hành',
+        category: 'Nhạc phát hành',
         subCategory: 'RnB',
         youtubeUrl: 'https://www.youtube.com/embed/kJQP7kiw5Fk',
         description: 'Stereo Width Reverb, Harmonic Exciter, Warm Vocal Tone',
@@ -195,7 +195,7 @@ async function main() {
         title: 'Chỉ Cần Em Hạnh Phúc',
         artist: 'Quang Huy',
         packageType: 'Nâng cao',
-        category: 'Phát hành',
+        category: 'Nhạc phát hành',
         subCategory: 'Ballad',
         youtubeUrl: 'https://www.youtube.com/embed/3JZ_D3ELwOQ',
         description: 'Piano & Vocal Acoustic Compression, Reverb Lexicon Hall',
@@ -243,7 +243,7 @@ async function main() {
         title: 'Nắng Chiều Bên Hiên',
         artist: 'Minh Quân ft. Bảo Anh',
         packageType: 'Cơ bản',
-        category: 'Phát hành',
+        category: 'Nhạc phát hành',
         subCategory: 'Pop',
         youtubeUrl: 'https://www.youtube.com/embed/uelHwf8o7_U',
         description: 'Bắt tai, tươi sáng, tối ưu cho TikTok & YouTube Shorts',
@@ -284,8 +284,6 @@ Thời gian: 19:00 - 21:00 Thứ 5 hàng tuần
 Chi phí: Hoàn toàn miễn phí (giới hạn 15 slot/buổi để đảm bảo tương tác 1-on-1).`,
         image: '/images/studio_mixing.png',
         category: 'Sự kiện',
-        date: 'Thứ 5 hàng tuần (19:00 - 21:00)',
-        location: 'Việt Hiphop Studio — 435/284/25 Phạm Văn Đồng, TP.HCM',
         author: 'Việt Hiphop Studio Team',
         order: 1,
       },
@@ -301,8 +299,6 @@ Thời gian: 14:00 - 17:30 ngày 25 Tháng 10, 2026
 Địa điểm: Việt Hiphop Studio — 435/284/25 Phạm Văn Đồng, TP.HCM`,
         image: '/images/studio_mic.png',
         category: 'Sự kiện',
-        date: '25 Tháng 10, 2026',
-        location: 'Việt Hiphop Studio — 435/284/25 Phạm Văn Đồng, TP.HCM',
         author: 'Sound Engineer Team',
         order: 2,
       },
@@ -315,8 +311,6 @@ Thời gian: 14:00 - 17:30 ngày 25 Tháng 10, 2026
 Tất cả các phần thu âm hay nhất trong đêm sẽ được ghi hình và đăng tải trên kênh chính thức của Việt Hiphop Studio.`,
         image: '/images/studio_space.png',
         category: 'Sự kiện',
-        date: '08 Tháng 11, 2026',
-        location: 'Việt Hiphop Studio — 435/284/25 Phạm Văn Đồng, TP.HCM',
         author: 'Việt Hiphop Event Team',
         order: 3,
       },
@@ -329,8 +323,6 @@ Tất cả các phần thu âm hay nhất trong đêm sẽ được ghi hình v�
 Hệ thống bổ sung gồm microphone huyền thoại Neumann U87 Ai, Preamp analog Neve 1073 Dual, loa kiểm âm Genelec The Ones cùng hệ thống xử lý âm học bass trap cải tiến. Mời các nghệ sĩ ghé trải nghiệm không gian âm thanh mới!`,
         image: '/images/studio_mixing.png',
         category: 'Tin tức',
-        date: 'Tháng 10, 2026',
-        location: 'Việt Hiphop Studio',
         author: 'Ban Quản Trị Studio',
         order: 4,
       },
@@ -350,14 +342,86 @@ Cách nhận ưu đãi: Đặt lịch qua Messenger hoặc gọi trực tiếp h
 Số lượng slot có hạn, ưu tiên khách đặt lịch sớm!`,
         image: '/images/studio_mixing.png',
         category: 'Ưu đãi',
-        date: '01/10/2026 – 31/10/2026',
-        location: 'Việt Hiphop Studio — 435/284/25 Phạm Văn Đồng, TP.HCM',
         author: 'Việt Hiphop Studio Team',
         order: 5,
       },
     ],
   });
   console.log('✅ Events / News seeded successfully!');
+
+  const galleryCount = await prisma.aboutGalleryImage.count();
+  if (galleryCount === 0) {
+    await prisma.aboutGalleryImage.createMany({
+      data: [
+        { src: '/images/studio-cover.webp', caption: 'Không gian Việt Hiphop Studio', order: 1 },
+        { src: '/images/studio_mixing.png', caption: 'Bàn mix & phòng điều khiển', order: 2 },
+      ],
+    });
+    console.log('✅ About gallery seeded!');
+  }
+
+  const gearCount = await prisma.gearCategory.count();
+  if (gearCount === 0) {
+    const gearSeed = [
+      {
+        title: 'Microphones',
+        icon: 'Mic2',
+        order: 1,
+        items: [
+          'Neumann U87 Ai (Large-diaphragm Condenser)',
+          'Rode NT1-A (Signature Vocal Mic)',
+          'Shure SM7B (Dynamic Broadcast & Rap Vocal)',
+          'AKG C214 (Percussion & Acoustic)',
+        ],
+      },
+      {
+        title: 'Audio Interface & Preamps',
+        icon: 'Cpu',
+        order: 2,
+        items: [
+          'Universal Audio Apollo x6 Thunderbolt 3',
+          'Neve 1073 SPX Mono Mic Preamp & EQ',
+          'Warm Audio WA-2A Tube Optical Compressor',
+          'UAD DSP Real-time Processing',
+        ],
+      },
+      {
+        title: 'Monitoring & Acoustics',
+        icon: 'Speaker',
+        order: 3,
+        items: [
+          'Yamaha HS8 Studio Monitors',
+          'Focal Shape 65 Nearfield Monitors',
+          'Yamaha HS8S Active Subwoofer',
+          'Xử lý tiêu âm & bass trap chuẩn âm học phòng thu',
+        ],
+      },
+      {
+        title: 'DAWs & High-End Plugins',
+        icon: 'Radio',
+        order: 4,
+        items: [
+          'Pro Tools Studio / Logic Pro X / FL Studio',
+          'FabFilter Total Bundle, Soundtoys 5',
+          'Universal Audio (UAD) Signature Collection',
+          'Antares Auto-Tune Pro & Celemony Melodyne 5',
+        ],
+      },
+    ];
+    for (const cat of gearSeed) {
+      await prisma.gearCategory.create({
+        data: {
+          title: cat.title,
+          icon: cat.icon,
+          order: cat.order,
+          items: {
+            create: cat.items.map((name, index) => ({ name, order: index + 1 })),
+          },
+        },
+      });
+    }
+    console.log('✅ Gear categories seeded!');
+  }
 }
 
 main()
