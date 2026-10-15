@@ -134,7 +134,7 @@ export class AboutService {
     },
   ) {
     await this.ensureItem(id);
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: any) => {
       if (Array.isArray(data.images)) {
         await tx.gearItemImage.deleteMany({ where: { itemId: id } });
         if (data.images.length) {
